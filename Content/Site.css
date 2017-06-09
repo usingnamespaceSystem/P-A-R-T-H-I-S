@@ -1,0 +1,418 @@
+﻿input::-webkit-input-placeholder {
+    color: #fff;
+    line-height: 2;
+}
+
+input::-moz-placeholder {
+    color: #fff;
+    line-height: 2;
+}
+/* Firefox 19+ */
+input:-moz-placeholder {
+    color: #fff;
+    line-height: 2;
+}
+/* Firefox 18- */
+input:-ms-input-placeholder {
+    color: #fff;
+    line-height: 2;
+}
+
+input[placeholder] {
+    text-overflow: ellipsis;
+    opacity: 0.6;
+    line-height: 2;
+}
+
+input::-moz-placeholder {
+    text-overflow: ellipsis;
+    opacity: 0.6;
+    line-height: 2;
+}
+
+input:-moz-placeholder {
+    text-overflow: ellipsis;
+    opacity: 0.6;
+    line-height: 2;
+}
+
+input:-ms-input-placeholder {
+    text-overflow: ellipsis;
+    opacity: 0.6;
+    line-height: 2;
+}
+
+input::-webkit-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    line-height: 2;
+}
+
+input::-moz-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    line-height: 2;
+}
+
+input:-moz-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+input:-ms-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+input:focus::-webkit-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+input:focus::-moz-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+input:focus:-moz-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+input:focus:-ms-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.input1::-webkit-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.input1::-moz-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.input1:-moz-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.input1:-ms-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.input1:focus::-webkit-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.input1:focus::-moz-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.input1:focus:-moz-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.input1:focus:-ms-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tabel-header::-webkit-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.tabel-header::-moz-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.tabel-header:-moz-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.tabel-header:-ms-input-placeholder {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.tabel-header:focus::-webkit-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tabel-header:focus::-moz-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tabel-header:focus:-moz-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.tabel-header:focus:-ms-input-placeholder {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+
+input[type=button] {
+    color: black;
+}
+
+a {
+    color: black;
+}
+
+#table table:first-child {
+    position:absolute;
+    width: 105%;
+    margin-top: 45px;
+    right: 0em;
+}
+
+.bigcell {
+    position:relative;
+    font-size: 15px;
+    padding: 25px;
+    background-color: #7e57c2;
+    vertical-align: top;
+    width: 300px;
+    height: 91px;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.4);
+    color: #f5f5f5;
+}
+.bigcell > span, .bigcell tr  > td, .bigcell tr  > th {
+    border-bottom: 1px #f5f5f5 solid;
+    border-spacing: 0;
+    border-collapse: collapse;
+    text-align:center;
+}
+.bigcell > table {
+    width: 99%;
+}
+
+.inputs_name {
+    background-color: #673ab7;
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-align: center;
+    color: black;
+    outline: none;
+}
+
+.inputs {
+    background-color: #7e57c2;
+    margin: 0;
+    padding: 0;
+    border: none;
+    text-align: center;
+    color: black;
+    outline: none;
+}
+
+a.textfield {
+    text-decoration: none;
+}
+
+a.textfield:hover {
+    text-decoration: none;
+}
+
+.flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    flex-shrink: 1;
+}
+
+body {
+    padding-top: 8%;
+    padding-bottom: 20px;
+}
+
+td input[type=text] {
+    width: 99%;
+    height: 99%;
+    color: white;
+}
+
+.block tr:first-child td:first-child {
+    box-shadow: none;
+    padding: 25px;
+    background-color: #673ab7;
+    vertical-align: top;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.4);
+    width: 244px;
+    height: 91px;
+}
+
+.block td {
+    padding: 25px;
+    background-color: #7e57c2;
+    vertical-align: top;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.4);
+    width: 244px;
+    height: 91px;
+}
+
+table {
+    border-spacing: 4px;
+    border-collapse: separate;
+    margin-bottom: 50px;
+}
+
+.block {
+    display: inline-block;
+    padding: 10px;
+    vertical-align: top;
+    position: relative;
+}
+
+.table_cells {
+   
+}
+
+.center {
+    text-align: center;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 780px) {
+    .jumbotron {
+        width: 1500px;
+        margin-left: -150px;
+        padding: 30px;
+        margin-bottom: 30px;
+        font-size: 19px;
+        font-weight: 200;
+        background-color: white;
+        position: absolute;
+        z-index: 9999;
+        top: -75px;
+        background-color: transparent;
+    }
+
+    .body-content {
+        height: 500px;
+        position: relative;
+        padding: 0;
+    }
+}
+
+.navbar-fixed-top > .container {
+    width: 90%;
+}
+
+.container > .navbar-header {
+    float: none;
+}
+
+.back {
+    color: #f5f5f5;
+    border: none;
+    background-color: inherit;
+    font-size: 20px;
+}
+
+.path {
+    color: #f5f5f5;
+    border: none;
+    background-color: inherit;
+    font-size: 13px;
+    float: left;
+}
+
+.registr > li {
+    float: none;
+}
+
+p.Main_title {
+    font-size: 30px;
+    color: #f5f5f5;
+    margin: 0 31px 0 0 ;
+}
+
+.registr {
+    margin-top: 45px;
+}
+
+td > .add {
+    position: absolute;
+    background-color: #f9a825;
+    border-radius: 35px;
+    color: #f5f5f5;
+    text-align: center;
+    font-size: 60px;
+    width: 64px;
+    height: 64px;
+    line-height: 1.1;
+    outline: none;
+    margin-top: 34px;
+    margin-left: -7px;
+}
+
+div > .add {
+    position: absolute;
+    background-color: #f9a825;
+    border-radius: 35px;
+    color: #f5f5f5;
+    text-align: center;
+    font-size: 60px;
+    width: 64px;
+    height: 64px;
+    line-height: 1.1;
+    outline: none;
+    right:5px;
+}
+
+.add:hover {
+    outline: none;
+    text-decoration: none;
+    color: #f5f5f5;
+    cursor: pointer; 
+}
+
+a.finish {
+    background-color: #f9a825;
+    color: #f5f5f5;
+    text-align: center;
+    font-size: 20px;
+    width: 100px;
+    height: 38px;
+    line-height: 1.8;
+    float:right;
+    margin-top:500px;
+    outline: none;
+    text-decoration: none;
+}
+a.finish:hover {
+    outline: none;
+    text-decoration: none;
+    color: #f5f5f5;
+}
+
+td:first-child:nth-last-child(1){
+  width: 300px;
+}
+
+td:first-child:nth-last-child(5),
+td:first-child:nth-last-child(5) ~ td {
+  width: 180px;
+}

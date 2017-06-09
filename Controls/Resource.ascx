@@ -1,0 +1,1 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="Resource.ascx.cs" Inherits="Resource" %>
