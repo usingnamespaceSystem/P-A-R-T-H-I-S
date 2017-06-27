@@ -1,6 +1,7 @@
 ﻿/* Hide result table and write all pages to array for case of page swaping */
 document.getElementById( "table" ).style.display = "none";
 document.getElementById( "back" ).style.display = "none";
+var model_name;
 var controls = [7];
 controls[0] = document.getElementById( "MainContent_Markets_place" );
 controls[1] = document.getElementById( "MainContent_Channels_place" );
@@ -19,8 +20,14 @@ controls[13] = document.getElementById( "MainContent_Functions_place" );
 controls[14] = document.getElementById( "MainContent_Operations_place" );
 
 //main app JSON structure
-var model = JSON.parse( localStorage.getItem( "JSON" ) );
+if ( document.getElementById( "UploadStore" ).value == "" ) {
+	var model = JSON.parse( localStorage.getItem( "JSON" ) );
+}
+else {
+	var model = JSON.parse( document.getElementById( "UploadStore" ).value );
+}
 let group_storage = {};
+
 //array for currently clicked parts of model
 var current_parts = {
 	"CurrentMarket": 0,
@@ -30,7 +37,7 @@ var current_parts = {
 	"CurrentContestor": 0,
 	"CurrentRes": 0,
 	"CurrentProcess": 0,
-	"CurrentFunction": 0,
+	"CurrentFunction": 0
 };
 
 //model root 
@@ -136,7 +143,7 @@ function NextBlock( go_to_page, path_to_element ) {
 		   ["Markets"][current_parts["CurrentMarket"]]
 		   ["Market" + current_parts["CurrentMarket"]][0]
 		   ["Contestors"];
-		
+
 		back.onclick = function () {
 			NextBlock( '0', 'Markets' );
 		};
@@ -598,7 +605,7 @@ function Build( part ) {
                         ["Market" +( markets.length ).toString()]: [{
                         	"ID": "Market" + ( markets.length ).toString(),
                         	"Name": "",
-                        	"Amount": "",
+                        	"Amount": 0,
                         	"Channels": [],
                         	"Contestors": []
                         }]
@@ -650,26 +657,33 @@ function Build( part ) {
 			var fifth_row = document.createElement( "tr" );
 
 			var first_cell_of_first_row = document.createElement( "td" );
-			first_cell_of_first_row.colSpan = 50;
+			first_cell_of_first_row.colSpan = 6;
 
 			var first_cell_of_second_row = document.createElement( "td" );
-			first_cell_of_second_row.colSpan = 30;
+			first_cell_of_second_row.colSpan = 4;
 			var second_cell_of_second_row = document.createElement( "td" );
-			second_cell_of_second_row.colSpan = 10;
+			second_cell_of_second_row.colSpan = 1;
 			var third_cell_of_second_row = document.createElement( "td" );
-			third_cell_of_second_row.colSpan = 10;
+			third_cell_of_second_row.colSpan = 1;
 
 			var first_cell_of_third_row = document.createElement( "td" );
-			first_cell_of_third_row.colSpan = 30;
+			first_cell_of_third_row.colSpan = 4;
 			var second_cell_of_third_row = document.createElement( "td" );
-			second_cell_of_third_row.colSpan = 10;
+			second_cell_of_third_row.colSpan = 1;
 			var third_cell_of_third_row = document.createElement( "td" );
-			third_cell_of_third_row.colSpan = 10;
+			third_cell_of_third_row.colSpan = 1;
 
 			var first_cell_of_fourth_row = document.createElement( "td" );
-			first_cell_of_fourth_row.colSpan = 35;
+			first_cell_of_fourth_row.colSpan = 4;
 			var second_cell_of_fourth_row = document.createElement( "td" );
-			second_cell_of_fourth_row.colSpan = 15;
+			second_cell_of_fourth_row.colSpan = 1;
+			var third_cell_of_fourth_row = document.createElement( "td" );
+			third_cell_of_fourth_row.colSpan = 1;
+
+			var first_cell_of_fifth_row = document.createElement( "td" );
+			first_cell_of_fifth_row.colSpan = 5;
+			var second_cell_of_fifth_row = document.createElement( "td" );
+			second_cell_of_fifth_row.colSpan = 1;
 
 			var name = document.createElement( "input" );
 			name.type = "text";
@@ -749,6 +763,33 @@ function Build( part ) {
 				TextChange( "Other", other );
 			};
 
+			var congestion = document.createElement( "input" );
+			congestion.type = "text";
+			congestion.className = "inputs";
+			congestion.placeholder = "Коэффициент загруженности";
+			congestion.id = "Сongestion" + ( channels.length ).toString();
+			congestion.onchange = function () {
+				TextChange( "Congestion", congestion );
+			};
+
+			var year_work_time = document.createElement( "input" );
+			year_work_time.type = "text";
+			year_work_time.className = "inputs";
+			year_work_time.placeholder = "Количество рабочих дней в году";
+			year_work_time.id = "Year_work" + ( channels.length ).toString();
+			year_work_time.onchange = function () {
+				TextChange( "Year_work", year_work_time );
+			};
+
+			var day_work_time = document.createElement( "input" );
+			day_work_time.type = "text";
+			day_work_time.className = "inputs";
+			day_work_time.placeholder = "Длина рабочего дня";
+			day_work_time.id = "Day_work" + ( channels.length ).toString();
+			day_work_time.onchange = function () {
+				TextChange( "Day_work", day_work_time );
+			};
+
 			var processes = document.createElement( "input" );
 			processes.id = "Processes" + current_parts["CurrentMarket"] + "-" + ( channels.length ).toString();
 			processes.type = "text";
@@ -785,13 +826,17 @@ function Build( part ) {
                         	"Positions": [],
                         	"Electricity": [],
                         	"Rent": [],
-                        	"Other": "",
-                        	"Processes": []
+                        	"Other": 0,
+                        	"Processes": [],
+                        	"Days_in_year": 0,
+                        	"Hours_in_day": 0,
+                        	"Congestion": 0
                         }]
 			} );
 
-			if ( document.getElementById( "add_channel" ).style.display = "block" )
+			if ( document.getElementById( "add_channel" ).style.display = "block" ) {
 				document.getElementById( "add_channel" ).style.display = "none";
+			}
 			else {
 				document.getElementById( "add_channel" ).style.display = "block";
 			}
@@ -800,6 +845,7 @@ function Build( part ) {
 			table.appendChild( second_row );
 			table.appendChild( third_row );
 			table.appendChild( fourth_row );
+			table.appendChild( fifth_row );
 
 			first_row.appendChild( first_cell_of_first_row );
 
@@ -813,6 +859,10 @@ function Build( part ) {
 
 			fourth_row.appendChild( first_cell_of_fourth_row );
 			fourth_row.appendChild( second_cell_of_fourth_row );
+			fourth_row.appendChild( third_cell_of_fourth_row );
+
+			fifth_row.appendChild( first_cell_of_fifth_row );
+			fifth_row.appendChild( second_cell_of_fifth_row );
 
 			first_cell_of_first_row.appendChild( name );
 
@@ -824,9 +874,14 @@ function Build( part ) {
 			second_cell_of_third_row.appendChild( positions );
 			third_cell_of_third_row.appendChild( other );
 
-			first_cell_of_fourth_row.appendChild( electricity );
-			second_cell_of_fourth_row.appendChild( processes );
-			second_cell_of_fourth_row.appendChild( add_button );
+			first_cell_of_fourth_row.appendChild( year_work_time );
+			second_cell_of_fourth_row.appendChild( day_work_time );
+			third_cell_of_fourth_row.appendChild( congestion );
+
+			first_cell_of_fifth_row.appendChild( electricity );
+			second_cell_of_fifth_row.appendChild( processes );
+			second_cell_of_fifth_row.appendChild( add_button );
+
 			container.appendChild( table );
 
 			break;
@@ -903,6 +958,7 @@ function Build( part ) {
 			freq_day.onchange = function () {
 				TextChange( "Goods_freq_day", freq_day );
 			};
+
 			var freq_month = document.createElement( "input" );
 			freq_month.type = "text";
 			freq_month.className = "inputs";
@@ -911,6 +967,7 @@ function Build( part ) {
 			freq_month.onchange = function () {
 				TextChange( "Goods_freq_month", freq_month );
 			};
+
 			var freq_week = document.createElement( "input" );
 			freq_week.type = "text";
 			freq_week.className = "inputs";
@@ -919,6 +976,7 @@ function Build( part ) {
 			freq_week.onchange = function () {
 				TextChange( "Goods_freq_week", freq_week );
 			};
+
 			var freq_year = document.createElement( "input" );
 			freq_year.type = "text";
 			freq_year.className = "inputs";
@@ -957,11 +1015,11 @@ function Build( part ) {
                         ["Goods" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +( goods.length ).toString()]: [{
                         	"ID": "Goods" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( goods.length ).toString(),
                         	"Name": "",
-                        	"Margin": "",
-                        	"Freq_day": "",
-                        	"Freq_week": "",
-                        	"Freq_month": "",
-                        	"Freq_year": "",
+                        	"Margin": 0,
+                        	"Freq_day": 0,
+                        	"Freq_week": 0,
+                        	"Freq_month": 0,
+                        	"Freq_year": 0,
                         	"Group": "",
                         	"Providers": [],
                         	"Resources": []
@@ -1064,8 +1122,8 @@ function Build( part ) {
                         ["Provider" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +current_parts["CurrentGoods"]+ "-" +( provider.length ).toString()]: [{
                         	"ID": "Provider" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentGoods"] + "-" + ( provider.length ).toString(),
                         	"Name": "",
-                        	"Price": "",
-                        	"Amount": ""
+                        	"Price": 0,
+                        	"Amount": 0
                         }]
 			} );
 
@@ -1145,7 +1203,7 @@ function Build( part ) {
                         ["Contestor" +current_parts["CurrentMarket"]+ "-" +( contestor.length ).toString()]: [{
                         	"ID": "Contestor" + current_parts["CurrentMarket"] + "-" + ( contestor.length ).toString(),
                         	"Name": "",
-                        	"Loyalty": "",
+                        	"Loyalty": 0,
                         	"Goods": []
                         }]
 			} );
@@ -1227,7 +1285,7 @@ function Build( part ) {
                         ["Goods" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentContestor"]+ "-" +( contestor_goods.length ).toString()]: [{
                         	"ID": "Goods" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentContestor"] + "-" + ( contestor_goods.length ).toString(),
                         	"Name": "",
-                        	"Price": ""
+                        	"Price": 0
                         }]
 			} );
 
@@ -1320,8 +1378,8 @@ function Build( part ) {
                         ["Assets" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +( assets.length ).toString()]: [{
                         	"ID": "Assets" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( assets.length ).toString(),
                         	"Name": "",
-                        	"Price": "",
-                        	"Useful_life": ""
+                        	"Price": 0,
+                        	"Useful_life": 0
                         }]
 			} );
 
@@ -1426,8 +1484,8 @@ function Build( part ) {
                         ["Positions" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +( positions.length ).toString()]: [{
                         	"ID": "Positions" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( positions.length ).toString(),
                         	"Name": "",
-                        	"Rate": "",
-                        	"Salary": ""
+                        	"Rate": 0,
+                        	"Salary": 0
                         }]
 			} );
 
@@ -1526,8 +1584,8 @@ function Build( part ) {
                         ["MBP" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +( mbp.length ).toString()]: [{
                         	"ID": "MBP" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( mbp.length ).toString(),
                         	"Name": "",
-                        	"Price": "",
-                        	"Amount": ""
+                        	"Price": 0,
+                        	"Amount": 0
                         }]
 			} );
 
@@ -1645,10 +1703,10 @@ function Build( part ) {
                         ["Electricity" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +( electricity.length ).toString()]: [{
                         	"ID": "Electricity" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( electricity.length ).toString(),
                         	"Name": "",
-                        	"Power": "",
-                        	"Amount": "",
-                        	"Time": "",
-							"Rate":""
+                        	"Power": 0,
+                        	"Amount": 0,
+                        	"Time": 0,
+                        	"Rate": 0
                         }]
 			} );
 
@@ -1758,9 +1816,9 @@ function Build( part ) {
                         ["Rent" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +( rent.length ).toString()]: [{
                         	"ID": "Rent" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( rent.length ).toString(),
                         	"Name": "",
-                        	"Price": "",
-                        	"Amount": "",
-                        	"Time": ""
+                        	"Price": 0,
+                        	"Amount": 0,
+                        	"Time": 0
                         }]
 			} );
 			if ( document.getElementById( "add_rent" ).style.display = "block" )
@@ -1805,13 +1863,9 @@ function Build( part ) {
 
 			var first_row = document.createElement( "tr" );
 			var second_row = document.createElement( "tr" );
-			var third_row = document.createElement( "tr" );
 
 			var first_cell_of_first_row = document.createElement( "td" );
 			first_cell_of_first_row.colSpan = 2;
-
-			var first_cell_of_second_row = document.createElement( "td" );
-			var second_cell_of_second_row = document.createElement( "td" );
 
 			var first_cell_of_third_row = document.createElement( "td" );
 			var second_cell_of_third_row = document.createElement( "td" );
@@ -1825,15 +1879,6 @@ function Build( part ) {
 				TextChange( "Process_name", name );
 			};
 
-			var duration = document.createElement( "input" );
-			duration.type = "text";
-			duration.className = "inputs";
-			duration.placeholder = "Продолжительность";
-			duration.id = "Process_duration" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( processes.length ).toString();
-			duration.onchange = function () {
-				TextChange( "Process_duration", duration );
-			};
-
 			var periodicity = document.createElement( "input" );
 			periodicity.type = "text";
 			periodicity.className = "inputs";
@@ -1841,15 +1886,6 @@ function Build( part ) {
 			periodicity.id = "Process_periodicity" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( processes.length ).toString();
 			periodicity.onchange = function () {
 				TextChange( "Process_periodicity", periodicity );
-			};
-
-			var effort = document.createElement( "input" );
-			effort.type = "text";
-			effort.className = "inputs";
-			effort.placeholder = "Трудозатратность";
-			effort.id = "Process_effort" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( processes.length ).toString();
-			effort.onchange = function () {
-				TextChange( "Process_effort", effort );
 			};
 
 			var functions = document.createElement( "input" );
@@ -1879,10 +1915,10 @@ function Build( part ) {
 			processes.push( {
                         ["Processes" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +( processes.length ).toString()]: [{
                         	"ID": "Processes" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + ( processes.length ).toString(),
-							"Name" : "",
-                        	"Duration": "",
-                        	"Effort": "",
-                        	"Periodicity": "",
+                        	"Name": "",
+                        	"Duration": 0,
+                        	"Periodicity": 0,
+                        	"Effort": 0,
                         	"Functions": []
                         }]
 			} );
@@ -1893,23 +1929,15 @@ function Build( part ) {
 				document.getElementById( "add_process" ).style.display = "block";
 			}
 
-
 			table.appendChild( first_row );
 			table.appendChild( second_row );
-			table.appendChild( third_row );
 
 			first_row.appendChild( first_cell_of_first_row );
 
-			second_row.appendChild( first_cell_of_second_row );
-			second_row.appendChild( second_cell_of_second_row );
-
-			third_row.appendChild( first_cell_of_third_row );
-			third_row.appendChild( second_cell_of_third_row );
+			second_row.appendChild( first_cell_of_third_row );
+			second_row.appendChild( second_cell_of_third_row );
 
 			first_cell_of_first_row.appendChild( name );
-
-			first_cell_of_second_row.appendChild( duration );
-			second_cell_of_second_row.appendChild( effort );
 
 			first_cell_of_third_row.appendChild( periodicity );
 			second_cell_of_third_row.appendChild( functions );
@@ -1936,13 +1964,9 @@ function Build( part ) {
 
 			var first_row = document.createElement( "tr" );
 			var second_row = document.createElement( "tr" );
-			var third_row = document.createElement( "tr" );
 
 			var first_cell_of_first_row = document.createElement( "td" );
-			first_cell_of_first_row.colSpan = 3;
-
-			var first_cell_of_second_row = document.createElement( "td" );
-			var second_cell_of_second_row = document.createElement( "td" );
+			first_cell_of_first_row.colSpan = 2;
 
 			var first_cell_of_third_row = document.createElement( "td" );
 			var second_cell_of_third_row = document.createElement( "td" );
@@ -1956,15 +1980,6 @@ function Build( part ) {
 				TextChange( "Functions_name", name );
 			};
 
-			var duration = document.createElement( "input" );
-			duration.type = "text";
-			duration.className = "inputs";
-			duration.placeholder = "Продолжительность";
-			duration.id = "Function_duration" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"] + "-" + ( functions.length ).toString();
-			duration.onchange = function () {
-				TextChange( "Function_duration", duration );
-			};
-
 			var periodicity = document.createElement( "input" );
 			periodicity.type = "text";
 			periodicity.className = "inputs";
@@ -1972,15 +1987,6 @@ function Build( part ) {
 			periodicity.id = "Function_periodicity" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"] + "-" + ( functions.length ).toString();
 			periodicity.onchange = function () {
 				TextChange( "Function_periodicity", periodicity );
-			};
-
-			var effort = document.createElement( "input" );
-			effort.type = "text";
-			effort.className = "inputs";
-			effort.placeholder = "Трудозатратность";
-			effort.id = "Function_effort" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"] + "-" + ( functions.length ).toString();
-			effort.onchange = function () {
-				TextChange( "Function_effort", effort );
 			};
 
 			var operations = document.createElement( "input" );
@@ -2010,10 +2016,10 @@ function Build( part ) {
 			functions.push( {
                         ["Functions" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +current_parts["CurrentProcess"]+ "-" +( functions.length ).toString()]: [{
                         	"ID": "Functions" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"] + "-" + ( functions.length ).toString(),
-							"Name" : "",
-                        	"Duration": "",
-                        	"Effort": "",
-                        	"Periodicity": "",
+                        	"Name": "",
+                        	"Duration": 0,
+                        	"Effort": 0,
+                        	"Periodicity": 0,
                         	"Operations": []
                         }]
 			} );
@@ -2026,20 +2032,13 @@ function Build( part ) {
 
 			table.appendChild( first_row );
 			table.appendChild( second_row );
-			table.appendChild( third_row );
 
 			first_row.appendChild( first_cell_of_first_row );
 
-			second_row.appendChild( first_cell_of_second_row );
-			second_row.appendChild( second_cell_of_second_row );
-
-			third_row.appendChild( first_cell_of_third_row );
-			third_row.appendChild( second_cell_of_third_row );
+			second_row.appendChild( first_cell_of_third_row );
+			second_row.appendChild( second_cell_of_third_row );
 
 			first_cell_of_first_row.appendChild( name );
-
-			first_cell_of_second_row.appendChild( duration );
-			second_cell_of_second_row.appendChild( effort );
 
 			first_cell_of_third_row.appendChild( periodicity );
 			second_cell_of_third_row.appendChild( operations );
@@ -2070,16 +2069,14 @@ function Build( part ) {
 
 			var first_row = document.createElement( "tr" );
 			var second_row = document.createElement( "tr" );
-			var third_row = document.createElement( "tr" );
 
 			var first_cell_of_first_row = document.createElement( "td" );
-			first_cell_of_first_row.colSpan = 2;
+			first_cell_of_first_row.colSpan = 3;
 
 			var first_cell_of_second_row = document.createElement( "td" );
-			var second_cell_of_second_row = document.createElement( "td" );
 
-			var first_cell_of_third_row = document.createElement( "td" );
-			first_cell_of_third_row.colSpan = 2;
+			var second_cell_of_second_row = document.createElement( "td" );
+			var third_cell_of_second_row = document.createElement( "td" );
 
 			var name = document.createElement( "input" );
 			name.type = "text";
@@ -2108,13 +2105,13 @@ function Build( part ) {
 				TextChange( "Operation_periodicity", periodicity );
 			};
 
-			var effort = document.createElement( "input" );
-			effort.type = "text";
-			effort.className = "inputs";
-			effort.placeholder = "Трудозатратность";
-			effort.id = "Operation_effort" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"] + "-" + current_parts["CurrentFunction"] + "-" + ( operations.length ).toString();
-			effort.onchange = function () {
-				TextChange( "Operation_effort", effort );
+			var performer = document.createElement( "input" );
+			performer.type = "text";
+			performer.className = "inputs";
+			performer.placeholder = "Исполнитель";
+			performer.id = "Performer" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"] + "-" + current_parts["CurrentFunction"] + "-" + ( operations.length ).toString();
+			performer.onchange = function () {
+				TextChange( "Performer", performer );
 			};
 
 			var add_button = document.createElement( "a" );
@@ -2134,10 +2131,11 @@ function Build( part ) {
 			operations.push( {
                         ["Operations" +current_parts["CurrentMarket"]+ "-" +current_parts["CurrentChannel"]+ "-" +current_parts["CurrentProcess"]+ "-" +current_parts["CurrentFunction"]+ "-" +( operations.length ).toString()]: [{
                         	"ID": "Operations" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"] + "-" + current_parts["CurrentFunction"] + "-" + ( operations.length ).toString(),
-							"Name" : "",
-                        	"Duration": "",
-                        	"Effort": "",
-                        	"Periodicity": ""
+                        	"Name": "",
+                        	"Duration": 0,
+                        	"Effort": 0,
+                        	"Periodicity": 0,
+                        	"Performer": ""
                         }]
 			} );
 
@@ -2149,22 +2147,19 @@ function Build( part ) {
 
 			table.appendChild( first_row );
 			table.appendChild( second_row );
-			table.appendChild( third_row );
 
 			first_row.appendChild( first_cell_of_first_row );
 
 			second_row.appendChild( first_cell_of_second_row );
 			second_row.appendChild( second_cell_of_second_row );
-
-			third_row.appendChild( first_cell_of_third_row );
+			second_row.appendChild( third_cell_of_second_row );
 
 			first_cell_of_first_row.appendChild( name );
 
 			first_cell_of_second_row.appendChild( duration );
-			second_cell_of_second_row.appendChild( effort );
-
-			first_cell_of_third_row.appendChild( periodicity );
-			first_cell_of_third_row.appendChild( add_button );
+			second_cell_of_second_row.appendChild( periodicity );
+			third_cell_of_second_row.appendChild( performer );
+			third_cell_of_second_row.appendChild( add_button );
 
 			container.appendChild( table );
 
@@ -2177,6 +2172,8 @@ function Build( part ) {
 	//	document.body.removeChild(document.getElementsByTagName("pre")[0]);
 	//}
 	//document.body.appendChild(document.createElement('pre')).innerHTML = syntaxHighlight(model);
+
+	document.getElementById( "LocalStore" ).value = JSON.stringify( model );
 }
 
 function TextChange( part, sender ) {
@@ -2201,6 +2198,33 @@ function TextChange( part, sender ) {
 				["Market" + current_parts["CurrentMarket"]][0]
 				["Channels"];
 			channels[parent_number[parent_number.length - 1]][parent.id][0]["Name"] = sender.value;
+
+			break;
+
+		case "Congestion":
+			var channels = model["Organization"][0]
+				["Markets"][current_parts["CurrentMarket"]]
+				["Market" + current_parts["CurrentMarket"]][0]
+				["Channels"];
+			channels[parent_number[parent_number.length - 1]][parent.id][0]["Congestion"] = sender.value;
+
+			break;
+
+		case "Day_work":
+			var channels = model["Organization"][0]
+				["Markets"][current_parts["CurrentMarket"]]
+				["Market" + current_parts["CurrentMarket"]][0]
+				["Channels"];
+			channels[parent_number[parent_number.length - 1]][parent.id][0]["Days_in_year"] = sender.value;
+
+			break;
+
+		case "Year_work":
+			var channels = model["Organization"][0]
+				["Markets"][current_parts["CurrentMarket"]]
+				["Market" + current_parts["CurrentMarket"]][0]
+				["Channels"];
+			channels[parent_number[parent_number.length - 1]][parent.id][0]["Hours_in_day"] = sender.value;
 
 			break;
 
@@ -2465,7 +2489,7 @@ function TextChange( part, sender ) {
 			Electricity[parent_number[parent_number.length - 1]][parent.id][0]["Name"] = sender.value;
 
 			break;
-			
+
 		case "Electricity_rate":
 			var Electricity = model["Organization"][0]
                 ["Markets"][current_parts["CurrentMarket"]]
@@ -2775,7 +2799,24 @@ function TextChange( part, sender ) {
 			operations[parent_number[parent_number.length - 1]][parent.id][0]["Effort"] = sender.value;
 
 			break;
+
+		case "Performer":
+			var operations = model["Organization"][0]
+                ["Markets"][current_parts["CurrentMarket"]]
+                ["Market" + current_parts["CurrentMarket"]][0]
+                ["Channels"][current_parts["CurrentChannel"]]
+                ["Channel" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"]][0]
+                ["Processes"][current_parts["CurrentProcess"]]
+                ["Processes" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"]][0]["Functions"][current_parts["CurrentFunction"]]
+                ["Functions" + current_parts["CurrentMarket"] + "-" + current_parts["CurrentChannel"] + "-" + current_parts["CurrentProcess"] + "-" + current_parts["CurrentFunction"]][0]
+				["Operations"];
+
+			operations[parent_number[parent_number.length - 1]][parent.id][0]["Performer"] = sender.value;
+
+			break;
 	}
+
+	document.getElementById( "LocalStore" ).value = JSON.stringify( model );
 }
 
 ///debug
@@ -2808,27 +2849,34 @@ function finish( switcher ) {
 			var editor = document.getElementById( "editor" );
 			var table = document.getElementById( "table" );
 			var finish_button = document.getElementById( "finish" );
+			document.getElementById( "path" ).style.display = "block";
+			document.getElementById( "back" ).style.display = "block";
+			document.getElementsByClassName( "bottom_left" )[0].style.display = "block";
 			table.style.display = "none";
 			editor.style.display = "block";
 			finish_button.innerText = "Готово";
+
 			finish_button.onclick = function () {
 				finish( 2 );
 			};
 
-			NextBlock(0, 'Markets');
+			NextBlock( 0, 'Markets' );
 			break;
 		case 2:
 			var editor = document.getElementById( "editor" );
 			var table = document.getElementById( "table" );
 			var finish_button = document.getElementById( "finish" );
-			document.getElementById( "path" ).style.display = "block";
+			
 			table.style.display = "block";
 			editor.style.display = "none";
 			finish_button.innerText = "Изменить";
 			finish_button.onclick = function () {
 				finish( 1 );
 			};
+
+			document.getElementById( "back" ).style.display = "none";
 			document.getElementById( "path" ).style.display = "none";
+			document.getElementsByClassName( "bottom_left" )[0].style.display = "none";
 			math();
 			view_providers();
 			view_contestors();
@@ -2836,10 +2884,14 @@ function finish( switcher ) {
 			view_res();
 			view_channels();
 			view_markets();
-
+			view_income();
+			view_outcome();
+			view_results();
+			view_proc();
 			break;
 	}
 }
+
 function view_providers() {
 	var block_table;
 	if ( document.getElementById( "providerBlock" ) == null ) {
@@ -2861,15 +2913,11 @@ function view_providers() {
 	var th_name = document.createElement( 'th' );
 	th_name.innerText = "Наименование";
 
-	var th_amount = document.createElement( 'th' );
-	th_amount.innerText = "Объем поставок";
-
 	var th_price = document.createElement( 'th' );
 	th_price.innerText = "Цена";
 
 	headers.appendChild( th_name );
 	headers.appendChild( th_price );
-	headers.appendChild( th_amount );
 	block_table.appendChild( headers );
 
 
@@ -2886,20 +2934,16 @@ function view_providers() {
 					var block_table_row = document.createElement( 'tr' );
 
 					var name = document.createElement( "td" );
-					var amount = document.createElement( "td" );
 					var price = document.createElement( "td" );
 
 					name.className = "table_cells";
-					amount.className = "table_cells";
 					price.className = "table_cells";
 
 					name.innerText = provider_item["Provider" + q + "-" + i + "-" + j + "-" + x][0]["Name"];
-					amount.innerText = provider_item["Provider" + q + "-" + i + "-" + j + "-" + x][0]["Amount"];
 					price.innerText = provider_item["Provider" + q + "-" + i + "-" + j + "-" + x][0]["Price"];
 
 					block_table_row.appendChild( name );
 					block_table_row.appendChild( price );
-					block_table_row.appendChild( amount );
 					block_table.appendChild( block_table_row );
 				} );
 			} );
@@ -2983,17 +3027,22 @@ function view_goods() {
 	var th_freq = document.createElement( 'th' );
 	th_freq.innerText = "Частота";
 
+	var th_abc = document.createElement( 'th' );
+	th_abc.innerText = "Приоритет";
+
 	headers.appendChild( th_name );
 	headers.appendChild( th_price );
 	headers.appendChild( th_margin );
 	headers.appendChild( th_freq );
+	headers.appendChild( th_abc );
+
 	block_table.appendChild( headers );
 
 	markets.forEach( function ( market, q, markets ) {
 		let channels = market["Market" + q][0]["Channels"];
 
 		channels.forEach( function ( channel_item, i, channels ) {
-			let goods = channel_item["Channel" + q + "-" + i][0]["Goods"];
+			let goods = channel_item["Channel" + q + "-" + i][0]["ABC"];
 
 			goods.forEach( function ( good_item, j, goods ) {
 				var block_table_row = document.createElement( 'tr' );
@@ -3001,27 +3050,109 @@ function view_goods() {
 				var margin = document.createElement( "td" );
 				var price = document.createElement( "td" );
 				var freq = document.createElement( "td" );
+				var abc = document.createElement( "td" );
 
 				name.className = "table_cells";
 				margin.className = "table_cells";
 				price.className = "table_cells";
 				freq.className = "table_cells";
+				abc.className = "table_cells";
 
-				name.innerText = good_item["Goods" + q + "-" + i + "-" + j][0]["Name"];
-				margin.innerText = good_item["Goods" + q + "-" + i + "-" + j][0]["Margin"];
-				price.innerText = good_item["Goods" + q + "-" + i + "-" + j][0]["Final_price"];
-				freq.innerText = good_item["Goods" + q + "-" + i + "-" + j][0]["Freq_year"];
+				name.innerText = good_item["Name"];
+				margin.innerText = good_item["Margin"];
+				price.innerText = good_item["Final_price"];
+				freq.innerText = good_item["Freq_year"];
+				abc.innerText = good_item["ABC"];
 
 				block_table_row.appendChild( name );
 				block_table_row.appendChild( price );
 				block_table_row.appendChild( margin );
 				block_table_row.appendChild( freq );
+				block_table_row.appendChild( abc );
 				block_table.appendChild( block_table_row );
 			} );
 		} );
 	} );
 
 	goods_in_table.appendChild( block_table );
+}
+
+function view_proc() {
+	var block_table;
+	if ( document.getElementById( "procBlock" ) == null ) {
+		block_table = document.createElement( 'table' );
+		block_table.id = "procBlock";
+	}
+	else {
+		block_table = ( document.getElementById( "procBlock" ) );
+		if ( block_table.childElementCount > 0 ) {
+			while ( block_table.firstChild ) {
+				block_table.removeChild( block_table.firstChild );
+			}
+		}
+	}
+
+	var proc_in_table = document.getElementById( "proc" );
+
+	var headers = document.createElement( 'tr' );
+
+	var th_name = document.createElement( 'th' );
+	th_name.innerText = "Наименование";
+
+	var th_func = document.createElement( 'th' );
+	th_func.innerText = "Функция";
+
+	var th_oper = document.createElement( 'th' );
+	th_oper.innerText = "Операция";
+
+	var th_perf = document.createElement( 'th' );
+	th_perf.innerText = "Исполнитель";
+
+	headers.appendChild( th_name );
+	headers.appendChild( th_func );
+	headers.appendChild( th_oper );
+	headers.appendChild( th_perf );
+
+	block_table.appendChild( headers );
+
+	markets.forEach( function ( market, q, markets ) {
+		let channels = market["Market" + q][0]["Channels"];
+
+		channels.forEach( function ( channel_item, i, channels ) {
+			let processes = channel_item["Channel" + q + "-" + i][0]["Processes"];
+
+			processes.forEach( function ( process, j, processes ) {
+
+				let functions = process["Processes" + q + "-" + i + "-" + j][0]["Functions"];
+
+				functions.forEach( function ( func, f, functions ) {
+					let operations = func["Functions" + q + "-" + i + "-" + j + "-" + f][0]["Operations"];
+
+					operations.forEach( function ( operation, o, operations ) {
+						let block_table_row = document.createElement( 'tr' );
+						let o_name = document.createElement( "td" );
+						let o_perf = document.createElement( "td" );
+						let p_name = document.createElement( "td" );
+						let f_name = document.createElement( "td" );
+
+						o_name.innerText = operation["Operations" + q + "-" + i + "-" + j + "-" + f + "-" + o][0]["Name"];
+						o_perf.innerText = operation["Operations" + q + "-" + i + "-" + j + "-" + f + "-" + o][0]["Performer"];
+						p_name.innerText = process["Processes" + q + "-" + i + "-" + j][0]["Name"];
+						f_name.innerText = func["Functions" + q + "-" + i + "-" + j + "-" + f][0]["Name"];
+
+						block_table_row.appendChild( p_name );
+						block_table_row.appendChild( f_name );
+						block_table_row.appendChild( o_name );
+						block_table_row.appendChild( o_perf );
+
+						block_table.appendChild( block_table_row );
+					} );
+				} );
+			} );
+		} );
+	} );
+
+	proc_in_table.appendChild( block_table );
 }
 
 function view_res() {
@@ -3031,7 +3162,7 @@ function view_res() {
 	if ( document.getElementById( "resBlock" ) == null ) {
 		block_table = document.createElement( 'table' );
 		block_table.id = "resBlock";
-		goods_in_table.appendChild( block_table )
+		goods_in_table.appendChild( block_table );
 	}
 	else {
 		block_table = ( document.getElementById( "resBlock" ) );
@@ -3042,7 +3173,6 @@ function view_res() {
 		}
 	}
 
-	
 	let a_sum = 0, m_sum = 0, p_sum = 0, e_sum = 0, r_sum = 0, o_sum = 0;
 
 	markets.forEach( function ( market, q, markets ) {
@@ -3059,11 +3189,11 @@ function view_res() {
 			assets.forEach( function ( asset, a, assets ) {
 				a_sum += asset["Assets" + q + "-" + i + "-" + a][0]["Price"];
 			} );
-			
+
 			mbp.forEach( function ( mb, m, mbp ) {
 				m_sum += mb["MBP" + q + "-" + i + "-" + m][0]["Price"] * mb["MBP" + q + "-" + i + "-" + m][0]["Amount"];
 			} );
-			
+
 			positions.forEach( function ( position, p, positions ) {
 				p_sum += position["Positions" + q + "-" + i + "-" + p][0]["Final_salary"] * position["Positions" + q + "-" + i + "-" + p][0]["Rate"];
 			} );
@@ -3075,9 +3205,9 @@ function view_res() {
 			rent.forEach( function ( ren, r, rent ) {
 				r_sum += ren["Rent" + q + "-" + i + "-" + r][0]["Price"] * ren["Rent" + q + "-" + i + "-" + r][0]["Amount"] * ren["Rent" + q + "-" + i + "-" + r][0]["Time"];
 			} );
-			
+
 			o_sum += channel_item["Channel" + q + "-" + i][0]["Other"];
-			
+
 		} );
 	} );
 	var a_block_table_row = document.createElement( 'tr' );
@@ -3149,10 +3279,6 @@ function view_res() {
 }
 
 function view_channels() {
-	var channels_json = model["Organization"][0]
-		["Markets"][current_parts["CurrentMarket"]]
-		["Market" + current_parts["CurrentMarket"]][0]
-		["Channels"];
 
 	var block_table;
 	if ( document.getElementById( "chBlock" ) == null ) {
@@ -3168,28 +3294,58 @@ function view_channels() {
 		}
 	}
 
-	var res_in_table = document.getElementById( "routes" );
+	var ch_in_table = document.getElementById( "routes" );
 	var headers = document.createElement( 'tr' );
 
 	var th_name = document.createElement( 'th' );
 	th_name.innerText = "Наименование";
 
+	var th_prof = document.createElement( 'th' );
+	th_prof.innerText = "Прибыль";
+
+	var th_profab = document.createElement( 'th' );
+	th_profab.innerText = "Рентабельность";
+
+	var th_loyals = document.createElement( 'th' );
+	th_loyals.innerText = "Лояльных клиентов";
+
 	headers.appendChild( th_name );
+	headers.appendChild( th_prof );
+	headers.appendChild( th_profab );
+	headers.appendChild( th_loyals );
+
 	block_table.appendChild( headers );
 
-	channels_json.forEach( function ( r, i, channels_json ) {
-		var block_table_row = document.createElement( 'tr' );
-		var name = document.createElement( "td" );
+	markets.forEach( function ( market, q, markets ) {
+		let channels = market["Market" + q][0]["Channels"];
 
-		name.className = "table_cells";
+		channels.forEach( function ( channel_item, i, channels ) {
+			var block_table_row = document.createElement( 'tr' );
+			var name = document.createElement( "td" );
+			var prof = document.createElement( "td" );
+			var profab = document.createElement( "td" );
+			var loyals = document.createElement( "td" );
 
-		name.innerText = r["Channel" + current_parts["CurrentMarket"] + "-" + i][0]["Name"];
+			name.className = "table_cells";
+			prof.className = "table_cells";
+			profab.className = "table_cells";
+			loyals.className = "table_cells";
 
-		block_table_row.appendChild( name );
-		block_table.appendChild( block_table_row );
+			name.innerText = channel_item["Channel" + current_parts["CurrentMarket"] + "-" + i][0]["Name"];
+			prof.innerText = channel_item["Channel" + current_parts["CurrentMarket"] + "-" + i][0]["Profit_year"];
+			profab.innerText = channel_item["Channel" + current_parts["CurrentMarket"] + "-" + i][0]["Profitability"];
+			loyals.innerText = channel_item["Channel" + current_parts["CurrentMarket"] + "-" + i][0]["Loyals"];
+
+			block_table_row.appendChild( name );
+			block_table_row.appendChild( prof );
+			block_table_row.appendChild( profab );
+			block_table_row.appendChild( loyals );
+
+			block_table.appendChild( block_table_row );
+		} );
 	} );
 
-	res_in_table.appendChild( block_table );
+	ch_in_table.appendChild( block_table );
 }
 
 function view_markets() {
@@ -3216,31 +3372,24 @@ function view_markets() {
 	var th_amount = document.createElement( 'th' );
 	th_amount.innerText = "Объем";
 
-	var th_loyalty = document.createElement( 'th' );
-	th_loyalty.innerText = "Количество лояльных клиентов";
-
 	headers.appendChild( th_name );
 	headers.appendChild( th_amount );
-	headers.appendChild( th_loyalty );
+
 	block_table.appendChild( headers );
 
 	markets.forEach( function ( m, i, markets ) {
 		var block_table_row = document.createElement( 'tr' );
 		var name = document.createElement( "td" );
 		var amount = document.createElement( "td" );
-		var loyalty = document.createElement( "td" );
 
 		name.className = "table_cells";
 		amount.className = "table_cells";
-		loyalty.className = "table_cells";
 
 		name.innerText = m["Market" + i][0]["Name"];
 		amount.innerText = m["Market" + i][0]["Amount"];
-		loyalty.innerText = typeof m["Market" + i][0]["Loyalty"] !== 'undefined' ? m["Market" + i][0]["Loyalty"] : 0;
 
 		block_table_row.appendChild( name );
 		block_table_row.appendChild( amount );
-		block_table_row.appendChild( loyalty );
 
 		block_table.appendChild( block_table_row );
 	} );
@@ -3248,6 +3397,247 @@ function view_markets() {
 	markets_in_table.appendChild( block_table );
 }
 
+function view_income() {
+	var block_table;
+	if ( document.getElementById( "income_block" ) == null ) {
+		block_table = document.createElement( 'table' );
+		block_table.id = "income_block";
+	}
+	else {
+		block_table = ( document.getElementById( "income_block" ) );
+		if ( block_table.childElementCount > 0 ) {
+			while ( block_table.firstChild ) {
+				block_table.removeChild( block_table.firstChild );
+			}
+		}
+	}
+	var inc = 0;
+	markets.forEach( function ( market, q, markets ) {
+		let channels = market["Market" + q][0]["Channels"];
+
+		channels.forEach( function ( channel_item, i, channels ) {
+			inc += channel_item["Channel" + q + "-" + i][0]["Income_year"];
+		} );
+	} );
+	var income_in_table = document.getElementById( "income" );
+	var block_table_row = document.createElement( 'tr' );
+	var incm = document.createElement( "td" );
+	incm.innerText = Math.round( inc );
+	block_table_row.appendChild( incm );
+	block_table.appendChild( block_table_row );
+	income_in_table.appendChild( block_table );
+}
+
+function view_outcome() {
+	var block_table;
+	if ( document.getElementById( "outcome_block" ) == null ) {
+		block_table = document.createElement( 'table' );
+		block_table.id = "outcome_block";
+	}
+	else {
+		block_table = ( document.getElementById( "outcome_block" ) );
+		if ( block_table.childElementCount > 0 ) {
+			while ( block_table.firstChild ) {
+				block_table.removeChild( block_table.firstChild );
+			}
+		}
+	}
+	var outc = 0;
+	markets.forEach( function ( market, q, markets ) {
+		let channels = market["Market" + q][0]["Channels"];
+
+		channels.forEach( function ( channel_item, i, channels ) {
+			outc += channel_item["Channel" + q + "-" + i][0]["Assets_year"];
+		} );
+	} );
+	var outcome_in_table = document.getElementById( "outcome" );
+	var block_table_row = document.createElement( 'tr' );
+	var outcm = document.createElement( "td" );
+	outcm.innerText = Math.round( outc );
+	block_table_row.appendChild( outcm );
+	block_table.appendChild( block_table_row );
+	outcome_in_table.appendChild( block_table );
+}
+
+function view_profit() {
+	var block_table;
+	if ( document.getElementById( "profit_block" ) == null ) {
+		block_table = document.createElement( 'table' );
+		block_table.id = "profit_block";
+	}
+	else {
+		block_table = ( document.getElementById( "profit_block" ) );
+		if ( block_table.childElementCount > 0 ) {
+			while ( block_table.firstChild ) {
+				block_table.removeChild( block_table.firstChild );
+			}
+		}
+	}
+	var prof = 0;
+	markets.forEach( function ( market, q, markets ) {
+		let channels = market["Market" + q][0]["Channels"];
+
+		channels.forEach( function ( channel_item, i, channels ) {
+			prof += channel_item["Channel" + q + "-" + i][0]["Profit_year"];
+		} );
+	} );
+	var outcome_in_table = document.getElementById( "prof" );
+	var block_table_row = document.createElement( 'tr' );
+	var prof_td = document.createElement( "td" );
+	prof_td.innerText = Math.round( prof );
+	block_table_row.appendChild( prof_td );
+	block_table.appendChild( block_table_row );
+	outcome_in_table.appendChild( block_table );
+}
+
+function view_profab() {
+	var block_table;
+	if ( document.getElementById( "profab_block" ) == null ) {
+		block_table = document.createElement( 'table' );
+		block_table.id = "profab_block";
+	}
+	else {
+		block_table = ( document.getElementById( "profab_block" ) );
+		if ( block_table.childElementCount > 0 ) {
+			while ( block_table.firstChild ) {
+				block_table.removeChild( block_table.firstChild );
+			}
+		}
+	}
+	var profab = 0;
+	markets.forEach( function ( market, q, markets ) {
+		let channels = market["Market" + q][0]["Channels"];
+
+		channels.forEach( function ( channel_item, i, channels ) {
+			profab += channel_item["Channel" + q + "-" + i][0]["Profitability"];
+		} );
+	} );
+	var outcome_in_table = document.getElementById( "profab" );
+	var block_table_row = document.createElement( 'tr' );
+	var profab_td = document.createElement( "td" );
+	profab_td.innerText = Math.round( profab );
+	block_table_row.appendChild( profab_td );
+	block_table.appendChild( block_table_row );
+	outcome_in_table.appendChild( block_table );
+}
+
+function view_results() {
+
+	var matrix;
+	if ( document.getElementById( "matrix_table" ) == null ) {
+		matrix = document.createElement( 'table' );
+		matrix.id = "matrix_table";
+	}
+	else {
+		matrix = ( document.getElementById( "matrix_table" ) );
+		if ( matrix.childElementCount > 0 ) {
+			while ( matrix.firstChild ) {
+				matrix.removeChild( matrix.firstChild );
+			}
+		}
+	}
+
+	var headers = document.createElement( "tr" );
+	var th_group_coef = document.createElement( "th" );
+	var th_group_name = document.createElement( "th" );
+
+	th_group_name.innerText = "Товарная группа";
+	th_group_coef.innerText = "Коэффициент конкурентоспособности";
+
+	headers.appendChild( th_group_name );
+	headers.appendChild( th_group_coef );
+
+	matrix.appendChild( headers );
+
+	markets.forEach( function ( market, q, markets ) {
+		let channels = market["Market" + q][0]["Channels"];
+
+		channels.forEach( function ( channel_item, i, channels ) {
+			let groups = channel_item["Channel" + q + "-" + i][0]["Goods_groups"];
+
+			for ( group in groups ) {
+				let matrix_row = document.createElement( 'tr' );
+				let group_coef = document.createElement( "td" );
+				let group_name = document.createElement( "td" );
+
+				group_name.innerText = group;
+				group_coef.innerText = groups[group]["Coeff"];
+
+				matrix_row.appendChild( group_name );
+				matrix_row.appendChild( group_coef );
+
+				matrix.appendChild( matrix_row );
+			}
+		} );
+	} );
+
+	var matrix_two;
+	if ( document.getElementById( "matrix_table_two" ) == null ) {
+		matrix_two = document.createElement( 'table' );
+		matrix_two.id = "matrix_table_two";
+	}
+	else {
+		matrix_two = ( document.getElementById( "matrix_table_two" ) );
+		if ( matrix_two.childElementCount > 0 ) {
+			while ( matrix_two.firstChild ) {
+				matrix_two.removeChild( matrix_two.firstChild );
+			}
+		}
+	}
+
+	var headers = document.createElement( "tr" );
+
+	var th_assets_year = document.createElement( "th" );
+	var th_assets_month = document.createElement( "th" );
+	var th_assets_week = document.createElement( "th" );
+	var th_assets_day = document.createElement( "th" );
+	var th_fund = document.createElement( "th" );
+
+	th_assets_year.innerText = "Оборотные средства за год";
+	th_assets_month.innerText = "Оборотные средства за месяц";
+	th_assets_week.innerText = "Оборотные средства за неделю";
+	th_assets_day.innerText = "Оборотные средства за день";
+	th_fund.innerText = "Фонд рабочего времени";
+
+	headers.appendChild( th_assets_year );
+	headers.appendChild( th_assets_month );
+	headers.appendChild( th_assets_week );
+	headers.appendChild( th_assets_day );
+	headers.appendChild( th_fund );
+
+	matrix_two.appendChild( headers );
+
+	markets.forEach( function ( market, q, markets ) {
+		let channels = market["Market" + q][0]["Channels"];
+
+		channels.forEach( function ( channel_item, i, channels ) {
+			let matrix_row = document.createElement( 'tr' );
+			let assets_year = document.createElement( "td" );
+			let assets_month = document.createElement( "td" );
+			let assets_week = document.createElement( "td" );
+			let assets_day = document.createElement( "td" );
+			let fund = document.createElement( "td" );
+
+			assets_year.innerHTML = channel_item["Channel" + q + "-" + i][0]["Assets_year"];
+			assets_month.innerHTML = channel_item["Channel" + q + "-" + i][0]["Assets_month"];
+			assets_week.innerHTML = channel_item["Channel" + q + "-" + i][0]["Assets_week"];
+			assets_day.innerHTML = channel_item["Channel" + q + "-" + i][0]["Assets_day"];
+			fund.innerHTML = channel_item["Channel" + q + "-" + i][0]["Fund"];
+
+			matrix_row.appendChild( assets_year );
+			matrix_row.appendChild( assets_month );
+			matrix_row.appendChild( assets_week );
+			matrix_row.appendChild( assets_day );
+			matrix_row.appendChild( fund );
+
+			matrix_two.appendChild( matrix_row );
+
+		} );
+	} );
+
+	document.getElementById( "matrix" ).appendChild( matrix );
+	document.getElementById( "matrix" ).appendChild( matrix_two );
+}
 
 function math() {
 	let prices;
@@ -3325,76 +3715,102 @@ function math() {
 
 	//--------------<Вычисление конкурентоспособности цены>--------------
 
-	let coef = 0, group_len = 0, diff = 0, all_val = 0;
-	markets.forEach( function ( market, i, markets ) {
-		let contestors = market["Market" + i][0]["Contestors"];
-		let channels = market["Market" + i][0]["Channels"];
+	markets.forEach( function ( market, m, markets ) {
+		let contestors = market["Market" + m][0]["Contestors"];
+		let channels = market["Market" + m][0]["Channels"];
 
-		channels.forEach( function ( channel, q, channels ) {
-			let goods_groups = channel["Channel" + i + "-" + q][0]["Goods_groups"];
-			let all_goods = channel["Channel" + i + "-" + q][0]["Goods"];
+		channels.forEach( function ( channel, c, channels ) {
+			let goods_groups = channel["Channel" + m + "-" + c][0]["Goods_groups"];
+			let all_val = 0;
 
 			for ( good_group_container in goods_groups ) {
 				let group = goods_groups[good_group_container];
+				let diff = 0, contestor_count = 0, count = 0, sum = 0, coef_group = 0;
 
-				group.forEach( function ( good_in_group, g_g, goods_groups ) {
-					let clear_good = typeof good_in_group["Goods" + i + "-" + q + "-" + g_g] != 'undefined' ?
-											good_in_group["Goods" + i + "-" + q + "-" + g_g][0] : 0;
+				group.forEach( function ( good_in_group, g_g, group ) {
+					let good = ( typeof good_in_group["Goods" + m + "-" + c + "-" + g_g] !== 'undefined' ) ? good_in_group["Goods" + m + "-" + c + "-" + g_g][0] : null;
 
-					if ( clear_good != 0 ) {
-						group_len++;
-						contestors.forEach( function ( contestor, j, contestors ) {
-							let cont_goods = contestor["Contestor" + i + "-" + j][0]["Goods"];
+					contestors.forEach( function ( contestor, con, contestors ) {
+						let cont_goods = contestor["Contestor" + m + "-" + con][0]["Goods"];
 
-							cont_goods.forEach( function ( cgood, c, cont_goods ) {
-								let clear_cgood = typeof cgood["Goods" + i + "-" + j + "-" + c] != 'undefined' ?
-														cgood["Goods" + i + "-" + j + "-" + c][0] : 0;
-								if ( clear_good["Name"] == clear_cgood["Name"] ) {
+						cont_goods.forEach( function ( cont_good, cg, cont_goods ) {
+							let ( typeof cont_good["Goods" + m + "-" + con + "-" + cg] !== 'undefined' ) ? cont_good["Goods" + m + "-" + con + "-" + cg][0] : null;
+							if ( good["Name"] == con_good["Name"] ) {
+								diff += parseFloat( con_good["Price"] ) - parseFloat( good["Final_price"] );
+								contestor_count++;
 
-									diff += parseFloat( clear_good["Final_price"] ) - parseFloat( clear_cgood["Price"] );
-									console.log( parseFloat( clear_good["Final_price"] ) - parseFloat( clear_cgood["Price"] ) );
-									console.log( diff );
-								}
-							} );
+							}
 						} );
-
-					}
+					} );
 
 				} );
+				coef_group = diff / group.length;
+				count += contestor_count;
+				sum += coef_group / contestor_count;
+				group["Coeff"] = sum / count;
 
-				coef = diff / group_len;
-				group["Coeff"] = coef;
-				channel["Channel" + i + "-" + q][0]["Valuation"] = parseFloat( group["Coeff"] ) + parseFloat( group["assortment_depth"] ) + 1.0;
-				all_val += parseFloat( group["Coeff"] ) + parseFloat( group["assortment_depth"] ) + 1.0;
-				console.log( all_val );
+				channel["Channel" + m + "-" + c][0]["Valuation"] = parseFloat( group["Coeff"] ) + parseFloat( group["assortment_depth"] ) + 1.0;
+				all_val += parseFloat( channel["Channel" + m + "-" + c][0]["Valuation"] );
 			}
-			channel["Channel" + i + "-" + q][0]["Loyals"] = ( parseFloat( market["Market" + i][0]["Amount"] ) * all_val ) / ( parseInt( market["Market" + i][0]["Amount"] ) + all_val );
+			channel["Channel" + m + "-" + c][0]["Loyals"] = ( parseFloat( market["Market" + m][0]["Amount"] ) * all_val ) / ( parseFloat( market["Market" + m][0]["Amount"] ) + all_val );
 		} );
 	} );
 
 	//--------------</Вычисление конкурентоспособности цены>--------------
-	let income_day = 0, income_week = 0, income_month = 0, income_year = 0,
-		assets_day = 0, assets_week = 0, assets_month = 0, assets_year = 0,
-		gain = 0;
+
 
 	markets.forEach( function ( market, a, markets ) {
 		let channels = market["Market" + a][0]["Channels"];
 
 		channels.forEach( function ( channel, b, channels ) {
+			let a_sum = 0, m_sum = 0, p_sum = 0, e_sum = 0, r_sum = 0, o_sum = 0;
 			let goods = channel["Channel" + a + "-" + b][0]["Goods"];
+			let assetss = channel["Channel" + a + "-" + b][0]["Assets"];
+			let mbp = channel["Channel" + a + "-" + b][0]["MBP"];
+			let positionss = channel["Channel" + a + "-" + b][0]["Positions"];
+			let other = channel["Channel" + a + "-" + b][0]["Other"];
+			let elect = channel["Channel" + a + "-" + b][0]["Electricity"];
+			let rent = channel["Channel" + a + "-" + b][0]["Rent"];
+			let income_day = 0, income_week = 0, income_month = 0, income_year = 0,
+				assets_day = 0, assets_week = 0, assets_month = 0, assets_year = 0,
+				gain = 0;
+
+			assetss.forEach( function ( asset, ast, assetss ) {
+				a_sum += asset["Assets" + a + "-" + b + "-" + ast][0]["Price"];
+			} );
+
+			mbp.forEach( function ( mb, m, mbp ) {
+				m_sum += mb["MBP" + a + "-" + b + "-" + m][0]["Price"] * mb["MBP" + a + "-" + b + "-" + m][0]["Amount"];
+			} );
+
+			positionss.forEach( function ( position, p, positionss ) {
+				p_sum += position["Positions" + a + "-" + b + "-" + p][0]["Final_salary"] * position["Positions" + a + "-" + b + "-" + p][0]["Rate"];
+			} );
+
+			elect.forEach( function ( el, e, elect ) {
+				e_sum += el["Electricity" + a + "-" + b + "-" + e][0]["Amount"] * el["Electricity" + a + "-" + b + "-" + e][0]["Rate"] * el["Electricity" + a + "-" + b + "-" + e][0]["Power"] * el["Electricity" + a + "-" + b + "-" + e][0]["Time"];
+			} );
+
+			rent.forEach( function ( ren, r, rent ) {
+				r_sum += ren["Rent" + a + "-" + b + "-" + r][0]["Price"] * ren["Rent" + a + "-" + b + "-" + r][0]["Amount"] * ren["Rent" + a + "-" + b + "-" + r][0]["Time"];
+			} );
+
+			o_sum += channel["Channel" + a + "-" + b][0]["Other"];
+
+			var all_exp = a_sum + m_sum + p_sum + e_sum + r_sum + o_sum;
 
 			goods.forEach( function ( good, c, goods ) {
-				income_day += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_day"] ) * parseInt( channel["Channel" + a + "-" + b][0]["Loyals"] );
-				income_week += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_week"] ) * parseInt( channel["Channel" + a + "-" + b][0]["Loyals"] );
-				income_month += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_month"] ) * parseInt( channel["Channel" + a + "-" + b][0]["Loyals"] );
-				income_year += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_year"] ) * parseInt( channel["Channel" + a + "-" + b][0]["Loyals"] );
+				income_day += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_day"] ) * parseFloat( Math.round( channel["Channel" + a + "-" + b][0]["Loyals"] ) );
+				income_week += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_week"] ) * parseFloat( Math.round( channel["Channel" + a + "-" + b][0]["Loyals"] ) );
+				income_month += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_month"] ) * parseFloat( Math.round( channel["Channel" + a + "-" + b][0]["Loyals"] ) );
+				income_year += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_year"] ) * parseFloat( Math.round( channel["Channel" + a + "-" + b][0]["Loyals"] ) );
 
-				assets_day += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_day"] );
-				assets_week += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_week"] );
-				assets_month += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_month"] );
-				assets_year += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_year"] );
+				assets_day += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_day"] ) + parseFloat( all_exp );
+				assets_week += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_week"] ) + parseFloat( all_exp );
+				assets_month += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_month"] ) + parseFloat( all_exp );
+				assets_year += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_year"] ) + parseFloat( all_exp );
 
-				gain += parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] );
+				gain += parseFloat(( good["Goods" + a + "-" + b + "-" + c][0]["Final_price"] - good["Goods" + a + "-" + b + "-" + c][0]["Purchase_price"] ) ) * parseFloat( good["Goods" + a + "-" + b + "-" + c][0]["Freq_year"] ) * parseFloat( Math.round( channel["Channel" + a + "-" + b][0]["Loyals"] ) );
 
 			} );
 
@@ -3440,13 +3856,12 @@ function math() {
 
 		channels.forEach( function ( channel, y, channels ) {
 			let goods = channel["Channel" + x + "-" + y][0]["Goods"];
+			gain = channel["Channel" + x + "-" + y][0]["Gain"];
 			let grow_share = 0;
 			let goods_array = [];
 
 			goods.forEach( function ( good, q, goods ) {
-				good["Goods" + x + "-" + y + "-" + q][0]["Gain_share"] = parseFloat( good["Goods" + x + "-" + y + "-" + q][0]["Final_price"] ) / gain;
-				grow_share += parseFloat( good["Goods" + x + "-" + y + "-" + q][0]["Final_price"] ) / gain;
-				good["Goods" + x + "-" + y + "-" + q][0]["Growing_share"] = grow_share;
+				good["Goods" + x + "-" + y + "-" + q][0]["Gain_share"] = parseFloat( good["Goods" + x + "-" + y + "-" + q][0]["Final_price"] ) * 100 / gain;
 
 				goods_array.push( good["Goods" + x + "-" + y + "-" + q][0] );
 			} );
@@ -3456,16 +3871,16 @@ function math() {
 			} );
 
 			goods_array.forEach( function ( good, q, goods_array ) {
-				grow_share += parseFloat( good["Final_price"] ) / gain;
+				grow_share += parseFloat( good["Final_price"] ) * 100 / gain;
 				good["Growing_share"] = grow_share;
 
-				if ( grow_share < 0.8 ) {
+				if ( grow_share <= 80 ) {
 					good["ABC"] = "A";
 				}
-				else if ( grow_share < 0.95 && grow_share > 0.8 ) {
+				else if ( grow_share <= 95 && grow_share >= 80 ) {
 					good["ABC"] = "B";
 				}
-				else if ( grow_share < 1 && grow_share > 0.95 ) {
+				else if ( grow_share <= 100 && grow_share >= 95 ) {
 					good["ABC"] = "C";
 				}
 
@@ -3474,4 +3889,97 @@ function math() {
 			channel["Channel" + x + "-" + y][0]["ABC"] = goods_array;
 		} );
 	} );
+
+	let operation_performer_array = [];
+	let performer_count = 0;
+	markets.forEach( function ( market, x, markets ) {
+		let channels = market["Market" + x][0]["Channels"];
+
+		channels.forEach( function ( channel, y, channels ) {
+			let processes = channel["Channel" + x + "-" + y][0]["Processes"];
+			let positions = channel["Channel" + x + "-" + y][0]["Positions"];
+
+			channel["Channel" + x + "-" + y][0]["Fund"] = channel["Channel" + x + "-" + y][0]["Days_in_year"] * channel["Channel" + x + "-" + y][0]["Hours_in_day"] * channel["Channel" + x + "-" + y][0]["Congestion"];
+
+			processes.forEach( function ( process, p, processes ) {
+				let functions = process["Processes" + x + "-" + y + "-" + p][0]["Functions"];
+				let process_effort = process["Processes" + x + "-" + y + "-" + p][0]["Effort"];
+				let process_periodicity = process["Processes" + x + "-" + y + "-" + p][0]["Periodicity"];
+
+				let process_duration = process["Processes" + x + "-" + y + "-" + p][0]["Duration"];
+
+				functions.forEach( function ( func, f, functions ) {
+					let operations = func["Functions" + x + "-" + y + "-" + p + "-" + f][0]["Operations"];
+					let function_effort = func["Functions" + x + "-" + y + "-" + p + "-" + f][0]["Effort"];
+					let function_periodicity = func["Functions" + x + "-" + y + "-" + p + "-" + f][0]["Periodicity"];
+
+					let function_duration = func["Functions" + x + "-" + y + "-" + p + "-" + f][0]["Duration"];
+
+					operations.forEach( function ( operation, o, operations ) {
+						let effort = 0;
+						let duration = operation["Operations" + x + "-" + y + "-" + p + "-" + f + "-" + o][0]["Duration"];
+						let periodicity = operation["Operations" + x + "-" + y + "-" + p + "-" + f + "-" + o][0]["Periodicity"];
+						let operation_effort = operation["Operations" + x + "-" + y + "-" + p + "-" + f + "-" + o][0]["Effort"];
+
+						let operation_duration = operation["Operations" + x + "-" + y + "-" + p + "-" + f + "-" + o][0]["Duration"];
+
+						function_duration += operation_duration * function_periodicity;
+
+						effort = duration * periodicity;
+
+						operation_effort = effort;
+						function_effort += effort;
+
+						operation["Operations" + x + "-" + y + "-" + p + "-" + f + "-" + o][0]["Effort"] = operation_effort;
+
+						operation_performer_array[performer_count] = operation["Operations" + x + "-" + y + "-" + p + "-" + f + "-" + o][0]["Performer"];
+						performer_count++;
+					} );
+					func["Functions" + x + "-" + y + "-" + p + "-" + f][0]["Duration"] = function_duration;
+					process_duration += function_duration * process_periodicity;
+
+					function_effort = function_effort * function_periodicity;
+					process_effort += function_effort;
+
+					func["Functions" + x + "-" + y + "-" + p + "-" + f][0]["Effort"] = function_effort;
+				} );
+
+				process["Processes" + x + "-" + y + "-" + p][0]["Duration"] = process_duration;
+				process_effort = process_effort * process_periodicity;
+				process["Processes" + x + "-" + y + "-" + p][0]["Effort"] = process_effort;
+			} );
+		} );
+	} );
+
+	//operation_performer_array.sort();
+	//let rate = 0;
+	//while ( operation_performer_array.firstChildElement ) {
+	//	if ( operation_performer_array.length == 1 ) {
+
+	//	}
+	//	while ( operation_performer_array[0] == operation_performer_array[1] ) {
+	//		rate+=2;
+
+	//		markets.push( {
+	//			"Positions": [{
+	//				"Name": operation_performer_array[0],
+	//				"Rate": rate
+	//			}]
+	//		} );
+
+	//		delete operation_performer_array[0];
+	//		delete operation_performer_array[count+1];
+	//	}
+	//}
+}
+
+function save_name() {
+	model_name = document.getElementById( "name" ).value;
+
+	model[model_name] = model["Organization"];
+
+	delete model["Organization"];
+
+	markets = model[model_name][0]["Markets"];
+	
 }

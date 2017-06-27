@@ -173,17 +173,34 @@ a {
     color: black;
 }
 
+#table {
+    margin-left: -11%;
+    z-index:9999;
+    position:relative;
+}
+
 #table table:first-child {
-    position:absolute;
-    width: 105%;
-    margin-top: 45px;
-    right: 0em;
+    position: relative;
+    width: 100%;
+}
+
+#matrix {
+    position: relative;
+    padding: 25px;
+    background-color: #7e57c2;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.4);
+    width: 111.7%;
+    color: #f5f5f5;
+
+}
+
+#matrix > table {
+    width: 100%;
 }
 
 .bigcell {
-    position:relative;
+    position: relative;
     font-size: 15px;
-    padding: 25px;
     background-color: #7e57c2;
     vertical-align: top;
     width: 300px;
@@ -191,14 +208,46 @@ a {
     box-shadow: 0 2px 3px 0 rgba(0,0,0,0.4);
     color: #f5f5f5;
 }
-.bigcell > span, .bigcell tr  > td, .bigcell tr  > th {
-    border-bottom: 1px #f5f5f5 solid;
-    border-spacing: 0;
-    border-collapse: collapse;
-    text-align:center;
+
+.bigcell > div, .bigcell tr > td, .bigcell tr > th {
+    text-align: center;
+    padding: 10px 10px;
 }
+
 .bigcell > table {
-    width: 99%;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bigcell > table > tr:nth-child(1n) {
+    background-color: #673ab7;
+}
+
+.bigcell > table > tr:nth-child(2n) {
+    background-color: inherit;
+}
+
+#matrix > table > tr:nth-child(1n) {
+    background-color: #673ab7;
+}
+
+#matrix > table > tr:nth-child(2n) {
+    background-color: inherit;
+}
+
+#matrix > table:first-child {
+    position: initial;
+    text-align: center;
+    border-collapse: collapse;
+    border-spacing: 0px;
+}
+
+    #matrix > table:first-child > tr > th {
+        text-align: center;
+    }
+
+#matrix > table > th {
+    text-align: center;
 }
 
 .inputs_name {
@@ -225,9 +274,9 @@ a.textfield {
     text-decoration: none;
 }
 
-a.textfield:hover {
-    text-decoration: none;
-}
+    a.textfield:hover {
+        text-decoration: none;
+    }
 
 .flex {
     display: flex;
@@ -243,13 +292,12 @@ body {
 }
 
 td input[type=text] {
-    width: 99%;
-    height: 99%;
+    width: 100%;
+    height: 100%;
     color: white;
 }
 
 .block tr:first-child td:first-child {
-    box-shadow: none;
     padding: 25px;
     background-color: #673ab7;
     vertical-align: top;
@@ -281,7 +329,6 @@ table {
 }
 
 .table_cells {
-   
 }
 
 .center {
@@ -291,18 +338,19 @@ table {
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
+    position: relative;
+    padding: 0;
 }
 
 /* Responsive: Portrait tablets and up */
-@media screen and (min-width: 780px) {
+@media screen and (min-width: 1200px) {
     .jumbotron {
-        width: 1500px;
-        margin-left: -150px;
+        width: 100%;
+        margin: 0 auto;
         padding: 30px;
         margin-bottom: 30px;
         font-size: 19px;
         font-weight: 200;
-        background-color: white;
         position: absolute;
         z-index: 9999;
         top: -75px;
@@ -310,9 +358,6 @@ table {
     }
 
     .body-content {
-        height: 500px;
-        position: relative;
-        padding: 0;
     }
 }
 
@@ -329,6 +374,7 @@ table {
     border: none;
     background-color: inherit;
     font-size: 20px;
+    z-index: 100000;
 }
 
 .path {
@@ -343,10 +389,10 @@ table {
     float: none;
 }
 
-p.Main_title {
+.Main_title {
     font-size: 30px;
     color: #f5f5f5;
-    margin: 0 31px 0 0 ;
+    margin: 0 31px 0 0;
 }
 
 .registr {
@@ -379,40 +425,73 @@ div > .add {
     height: 64px;
     line-height: 1.1;
     outline: none;
-    right:5px;
+    right: 5px;
 }
 
 .add:hover {
     outline: none;
     text-decoration: none;
     color: #f5f5f5;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
-a.finish {
+.finish {
     background-color: #f9a825;
-    color: #f5f5f5;
     text-align: center;
+    position:fixed;
     font-size: 20px;
     width: 100px;
     height: 38px;
     line-height: 1.8;
-    float:right;
-    margin-top:500px;
-    outline: none;
-    text-decoration: none;
-}
-a.finish:hover {
-    outline: none;
-    text-decoration: none;
+    z-index: 9999;
+    box-shadow: 0 2px 3px 0 rgba(0,0,0,0.4);
     color: #f5f5f5;
+    outline: none;
+    text-decoration: none;
+    top: 42em;
+    right: 2em;
+    cursor: pointer;
 }
 
-td:first-child:nth-last-child(1){
-  width: 300px;
+.bottom_left{
+    position:fixed;
+    top: 45em;
+    left: 2em;
+}
+
+.save_and_load {
+    display:block;
+}
+
+.save_name {
+    width:300px;
+}
+
+.save {
+    cursor: pointer;
+    width:initial;
+    border: none;
+    display:block;
+}
+
+.upload {
+    cursor: pointer;
+    border: none;
+}
+
+.save_and_load > td :first-child {
+    width:300px;
+}
+
+.select_upload {
+    border: none;
+}
+
+td:first-child:nth-last-child(1) {
+    width: 300px;
 }
 
 td:first-child:nth-last-child(5),
 td:first-child:nth-last-child(5) ~ td {
-  width: 180px;
+    width: 180px;
 }

@@ -8,9 +8,17 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Text;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using MongoDB.Driver.Core;
+using MongoDB.Driver.Builders;
 
 public partial class _Default : Page
 {
+    protected static IMongoClient _client;
+    protected static IMongoDatabase _database;
+    protected static IMongoCollection<BsonDocument> _collection;
+    protected List<BsonDocument> models;
     JObject organization = new JObject(
 
            new JProperty("Organization", new JArray(
@@ -31,11 +39,43 @@ public partial class _Default : Page
         }
     }
 
-    void Page_Load(object sender, EventArgs e)
+    async void Page_Load(object sender, EventArgs e)
     {
+
         if (!IsPostBack)
         {
             ViewState["JSON"] = JsonConvert.SerializeObject(Organization);
+
+            _client = new MongoClient("mongodb://localhost:27017");
+            _database = _client.GetDatabase("Parthis");
+            _collection = _database.GetCollection<BsonDocument>("Parthis");
+
+            models = _collection.Find(x => true).ToList();
+
+            select_model.Items.Clear();
+
+            if (models.Count > 0)
+            {
+                var filter = new BsonDocument();
+                using (var cursor = await _collection.FindAsync(filter))
+                {
+                    while (await cursor.MoveNextAsync())
+                    {
+                        var batch = cursor.Current;
+
+                        foreach (var document in batch)
+                        {
+                            select_model.Items.Add(document[0].ToString());
+                        }
+                    }
+                }
+            }
+            else
+            {
+                select_model.Items.Add("Нет созданных моделей");
+                select_model.Enabled = false;
+            }
+
         }
         else
         {
@@ -74,7 +114,7 @@ public partial class _Default : Page
                                                 new JProperty("ID", string.Empty),
                                                 new JProperty("Expenses", string.Empty),
                                                 new JProperty("Cost", string.Empty))))))),
-                      
+
                         new JProperty("Contestors", new JArray(
                             new JObject(
                                 new JProperty("ID", string.Empty),
@@ -87,7 +127,80 @@ public partial class _Default : Page
                                        new JProperty("Name", string.Empty),
                                        new JProperty("Price", string.Empty))))
                             )))));
+
                 ViewState["JSON"] = JsonConvert.SerializeObject(Organization);
+
+            }
+
+            _client = new MongoClient("mongodb://localhost:27017");
+            _database = _client.GetDatabase("Parthis");
+            _collection = _database.GetCollection<BsonDocument>("Parthis");
+
+            models = _collection.Find(x => true).ToList();
+
+            select_model.Items.Clear();
+
+            if (models.Count > 0)
+            {
+                var filter = new BsonDocument();
+
+                using (var cursor = await _collection.FindAsync(filter))
+                {
+                    while (await cursor.MoveNextAsync())
+                    {
+                        var batch = cursor.Current;
+
+                        foreach (var document in batch)
+                        {
+                            select_model.Items.Add(document[0].ToString());
+                        }
+                    }
+                }
+            }
+            else
+            {
+                select_model.Items.Add("Нет созданных моделей");
+                select_model.Enabled = false;
+            }
+        }
+
+
+    }
+
+    protected void save_model(object sender, EventArgs e)
+    {
+        if (_client == null)
+        {
+            _client = new MongoClient("mongodb://localhost:27017");
+            _database = _client.GetDatabase("Parthis");
+            _collection = _database.GetCollection<BsonDocument>("Parthis");
+        }
+
+        var json = JObject.Parse(LocalStore.Value);
+        var jsonDoc = JsonConvert.SerializeObject(json);
+        var bsonDoc = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(jsonDoc);
+
+        _collection.InsertOne(bsonDoc);
+
+    }
+
+    protected async void upload_model(object sender, EventArgs e)
+    {
+        if (_client == null)
+        {
+            _client = new MongoClient("mongodb://localhost:27017");
+            _database = _client.GetDatabase("Parthis");
+            _collection = _database.GetCollection<BsonDocument>("Parthis");
+
+            var filter = new BsonDocument(new BsonElement("_id", select_model.SelectedValue));
+
+            using (var cursor = await _collection.FindAsync(filter))
+            {
+                while (await cursor.MoveNextAsync())
+                {
+                    var batch = cursor.Current;
+                    UploadStore.Value = batch.ToString();
+                }
             }
         }
     }

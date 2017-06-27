@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Go Ostrich" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" Debug="true" %>
+﻿<%@ Page Title="P A R T H I S" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" Debug="true" Async="true" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div class="jumbotron" runat="server" id="jumbotron">
@@ -170,52 +170,81 @@
 
         </div>
 
-        <div id="table" class="center">
-            <table class="results">
-                <tr>
-                    <td id="provider" class="bigcell">
-                        <span>Партнеры</span>
-                    </td>
+        <div id="finish" class="finish" onclick="finish(2)">Готово</div>
+        
+        <table class="bottom_left">
 
-                    <td id="resources" rowspan="2" class="bigcell">
-                        <span>Ресурсы</span>
-                    </td>
+            <tr class="save_and_load">
+                <td>
+                    <input type="text" class="save_name" id="name" onchange="save_name()" />
+                </td>
 
-                    <td id="good" rowspan="2" class="bigcell">
-                        <span>Ценностные предложения</span>
-                    </td>
+                <td>
+                    <asp:Button class="save" runat="server" ID="save" OnClick="save_model" Text="Сохранить"></asp:Button>
+                </td>
+            </tr>
 
-                    <td id="routes" rowspan="2" class="bigcell">
-                        <span>Каналы сбыта</span>
-                    </td>
+            <tr class="save_and_load">
+                <td>
+                    <asp:DropDownList class="select_upload" runat="server" ID="select_model"></asp:DropDownList>
+                </td>
+                <td>
+                    <asp:Button class="upload" runat="server" ID="upload" OnClick="upload_model" Text="Загрузить"></asp:Button>
+                </td>
+            </tr>
 
-                    <td id="market" rowspan="2" class="bigcell">
-                        <span>Потребительские сегменты</span>
-                    </td>
-                </tr>
+        </table>
 
-                <tr>
-                    <td id="contestors" class="bigcell">
-                        <span>Конкуренты</span>
-                    </td>
-
-                    
-
-                </tr>
-
-                <tr>
-                    <td colspan="3" class="bigcell">
-                        <span>Расходы</span>
-                    </td>
-                    <td colspan="2" class="bigcell">
-                        <span>Доходы</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <a href="#" id="finish" class="finish" onclick="finish(2)">Готово</a>
+        <asp:HiddenField ID="LocalStore" runat="server" ClientIDMode="Static" />
+        <asp:HiddenField ID="UploadStore" runat="server" ClientIDMode="Static" />
     </div>
 
+    <div id="table" class="center">
+        <table class="results">
+            <tr>
+                <td id="provider" colspan="100" class="bigcell">
+                    <div>Партнеры</div>
+                </td>
+
+                <td id="resources" colspan="100" rowspan="2" class="bigcell">
+                    <div>Ресурсы</div>
+                </td>
+
+                <td id="good" colspan="100" rowspan="2" class="bigcell">
+                    <div>Ценностные предложения</div>
+                </td>
+
+                <td id="routes" colspan="100" class="bigcell">
+                    <div>Каналы сбыта</div>
+                </td>
+
+                <td id="market" colspan="100" rowspan="2" class="bigcell">
+                    <div>Потребительские сегменты</div>
+                </td>
+            </tr>
+
+            <tr>
+                <td id="contestors" colspan="100" class="bigcell">
+                    <div>Конкуренты</div>
+                </td>
+
+                <td id="proc" colspan="100" class="bigcell">
+                    <div>Процессы</div>
+                </td>
+
+            </tr>
+
+            <tr>
+                <td colspan="300" class="bigcell" id="outcome">
+                    <div>Расходы</div>
+                </td>
+                <td colspan="200" class="bigcell" id="income">
+                    <div>Доходы</div>
+                </td>
+            </tr>
+        </table>
+        <div id="matrix"></div>
+    </div>
     <script type="text/javascript">
         localStorage.setItem( "JSON", JSON.stringify(<%= Organization %> ) );
     </script>

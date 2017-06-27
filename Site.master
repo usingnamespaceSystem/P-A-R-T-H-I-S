@@ -4,7 +4,7 @@
 
 <html lang="ru">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %></title>
@@ -12,7 +12,7 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
 </head>
@@ -20,8 +20,7 @@
     <form runat="server">
         <asp:ScriptManager runat="server">
             <Scripts>
-                <%--Дополнительные сведения об объединении сценариев в ScriptManager см. по адресу: http://go.microsoft.com/fwlink/?LinkID=301884 --%>
-                <%--Сценарии .NET Framework--%>
+
                 <asp:ScriptReference Name="MsAjaxBundle" />
                 <asp:ScriptReference Name="jquery" />
                 <asp:ScriptReference Name="bootstrap" />
@@ -35,8 +34,7 @@
                 <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
-                
-                <%--Сценарии сайта--%>
+
             </Scripts>
         </asp:ScriptManager>
 
@@ -68,10 +66,13 @@
                 </div>
                 <div class="navbar-collapse collapse ">
                     <ul class="nav navbar-nav registr">
-                        <li><input id="back" type="text" class="back" value="← Назад" readonly /></li>
-                        <li><div id="path" class ="path"></div></li>
+                        <li>
+                            <input id="back" type="text" class="back" value="← Назад" readonly /></li>
+                        <li>
+                            <div id="path" class="path"></div>
+                        </li>
                     </ul>
-                    
+
                 </div>
             </div>
         </div>
